@@ -5512,12 +5512,12 @@
         }
       },
       "links": {},
-      "address": "0x77B4dAEd6B9264716c3bd9F6d8de1BAf69c7BaE1",
-      "transactionHash": "0x8ad9cd44d1621f2d7c3deb1780554753c2d0f3f94dffcf7a0374edaccb7cc674"
+      "address": "0x92Fed8d91230324DF751B416eC6665fB48038BD5",
+      "transactionHash": "0xe1d52b90818a49d4e0f991e41b391904dd92dfbd0807ccb67720f6b3b5bc032f"
     }
   },
   "schemaVersion": "3.1.0",
-  "updatedAt": "2020-05-09T12:33:29.946Z",
+  "updatedAt": "2020-05-09T18:42:51.016Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
