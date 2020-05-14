@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import Main from "./Main";
 
 
+
 const App = () => {
   const [account, setAccount] = useState("");
   const [productCount, setProductCount] = useState(null);
