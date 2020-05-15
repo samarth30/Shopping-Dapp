@@ -5,6 +5,7 @@ import Marketplace from "../abis/Marketplace.json";
 import Navbar from "./Navbar";
 import Main from "./Main";
 
+
 const App = () => {
   const [account, setAccount] = useState("");
   const [productCount, setProductCount] = useState(null);
@@ -38,10 +39,10 @@ const App = () => {
     setAccount(accounts[0]);
     const networkId = await web3.eth.net.getId();
     const networkData = Marketplace.networks[networkId];
-    if (networkData) {
+    if (1) {
       const marketplace = web3.eth.Contract(
         Marketplace.abi,
-        networkData.address
+        "0x1D32E357Fe5a95AaDe269B320481957754EceE96"
       );
       setMarketPlace(marketplace);
       const productCount = await marketplace.methods.productCount().call();
