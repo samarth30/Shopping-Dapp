@@ -1,18 +1,26 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import Web3 from "web3";
-import logo from "../logo.png";
 import "./App.css";
 import Marketplace from "../abis/Marketplace.json";
 import Navbar from "./Navbar";
 import Main from "./Main";
 
-class App extends Component {
-  async componentWillMount() {
-    await this.loadWeb3();
-    await this.loadBlockchainData();
-  }
 
-  async loadWeb3() {
+
+const App = () => {
+  const [account, setAccount] = useState("");
+  const [productCount, setProductCount] = useState(null);
+  const [products, setproducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [marketplace, setMarketPlace] = useState({});
+
+  useEffect(() => {
+    loadWeb3();
+    loadBlockchainData();
+    //esl
+  }, []);
+
+  const loadWeb3 = async () => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
@@ -23,93 +31,80 @@ class App extends Component {
         "Non-Ethereum browser detected. You should consider trying MetaMask!"
       );
     }
-  }
+  };
 
-  async loadBlockchainData() {
+  const loadBlockchainData = async () => {
     const web3 = window.web3;
     // Load account
     const accounts = await web3.eth.getAccounts();
-    this.setState({ account: accounts[0] });
+    setAccount(accounts[0]);
     const networkId = await web3.eth.net.getId();
     const networkData = Marketplace.networks[networkId];
-    if (networkData) {
+    if (1) {
       const marketplace = web3.eth.Contract(
         Marketplace.abi,
-        networkData.address
+        "0x1D32E357Fe5a95AaDe269B320481957754EceE96"
       );
-      this.setState({ marketplace });
+      setMarketPlace(marketplace);
       const productCount = await marketplace.methods.productCount().call();
-      this.setState({ productCount });
+      setProductCount(productCount);
+      console.log(productCount);
       // Load products
       for (var i = 1; i <= productCount; i++) {
         const product = await marketplace.methods.products(i).call();
-        this.setState({
-          products: [...this.state.products, product],
-        });
+        products.push(product);
       }
-      this.setState({ loading: false });
+      setproducts(products);
+      setLoading(false);
     } else {
       window.alert("Marketplace contract not deployed to detected network.");
     }
-  }
+  };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      account: "",
-      productCount: 0,
-      products: [],
-      loading: true,
-    };
-
-    this.createProduct = this.createProduct.bind(this);
-    this.purchaseProduct = this.purchaseProduct.bind(this);
-  }
-
-  createProduct(name, price) {
-    this.setState({ loading: true });
-    this.state.marketplace.methods
+  const createProduct = (name, price) => {
+    setLoading(true);
+    console.log(productCount);
+    marketplace.methods
       .createProduct(name, price)
-      .send({ from: this.state.account })
+      .send({ from: account })
       .once("receipt", (receipt) => {
-        this.setState({ loading: false });
+        setLoading(false);
       });
-  }
+  };
 
-  purchaseProduct(id, price) {
-    this.setState({ loading: true });
-    this.state.marketplace.methods
+  const purchaseProduct = (id, price) => {
+    setLoading(true);
+    marketplace.methods
       .purchaseProduct(id)
-      .send({ from: this.state.account, value: price })
+      .send({ from: account, value: price })
       .once("receipt", (receipt) => {
-        this.setState({ loading: false });
+        setLoading(false);
       });
-  }
+  };
 
-  render() {
-    return (
-      <div>
-        <Navbar account={this.state.account} />
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 d-flex">
-              {this.state.loading ? (
-                <div id="loader" className="text-center">
-                  <p className="text-center">Loading...</p>
-                </div>
-              ) : (
-                <Main
-                  products={this.state.products}
-                  createProduct={this.createProduct}
-                  purchaseProduct={this.purchaseProduct}
-                />
-              )}
-            </main>
-          </div>
+  return (
+    <div>
+      <Navbar account={account} />
+      <div className="container-fluid mt-5">
+        <div className="row">
+          <main role="main" className="col-lg-12 d-flex">
+            {loading ? (
+              <div id="loader" className="text-center">
+                <p className="text-center">Loading...</p>
+              </div>
+            ) : (
+              <Main
+                products={products}
+                createProduct={createProduct}
+                purchaseProduct={purchaseProduct}
+                account={account}
+              />
+            )}
+          </main>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default App;
