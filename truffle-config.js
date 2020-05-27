@@ -11,6 +11,11 @@ module.exports = {
       network_id: "*",
       port: 854,
       host: "127.0.0.1"
+    },
+    loc_developer_developer: {
+      network_id: "*",
+      port: 8545,
+      host: "127.0.0.1"
     }
   },
   contracts_directory: './src/contracts/',

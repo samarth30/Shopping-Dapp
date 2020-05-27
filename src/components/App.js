@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Component } from "react";
 import Web3 from "web3";
 import "./App.css";
 import Marketplace from "../abis/Marketplace.json";
 import Navbar from "./Navbar";
 import Main from "./Main";
-
-
 
 const App = () => {
   const [account, setAccount] = useState("");
@@ -43,7 +41,7 @@ const App = () => {
     if (1) {
       const marketplace = web3.eth.Contract(
         Marketplace.abi,
-        "0x1D32E357Fe5a95AaDe269B320481957754EceE96"
+        networkData.address
       );
       setMarketPlace(marketplace);
       const productCount = await marketplace.methods.productCount().call();
